@@ -1,9 +1,9 @@
-const path = require('path');
 const fs = require('fs')
-const express = require('express');
 const https = require('https');
+const path = require('path');
+const express = require('express');
 
-const PORT = 5000
+const PORT = 3000
 
 const app = express();
 
@@ -16,8 +16,8 @@ app.get('/',(req,res) => {
 });
 
 https.createServer({
-    cert:fs.readFileSync('cert.pem'),
-    key:fs.readFileSync('key.pem'),
+    key : fs.readFileSync('newkey.pem'),
+    cert : fs.readFileSync('cert.pem'),
 }, app).listen(PORT, () => {
     console.log( `Server running on port ${PORT}`);
 })
