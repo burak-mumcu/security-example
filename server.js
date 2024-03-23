@@ -10,7 +10,23 @@ const app = express();
 
 app.use(helmet());
 
-app.get('/secret', (req, res) => {
+function checkUser(req,res,next){
+        const isLogged = true;
+        if(!isLogged) return res.status(401).json({error:'Giriş yap'})
+        next()
+}
+
+function checkPermission (req,res,next){
+    // bu fonksiyon yetkilendirme kontrolleri için yazılacak
+}
+
+app.get('/auth/google',(req,res) => {})
+
+app.get('/auth/google/callback',(req,res) => {})
+
+app.get('/auth/logout',(req,res) => {})
+
+app.get('/secret',checkUser,checkPermission, (req, res) => {
     return res.send('Your secret value is 25')
 })
 
