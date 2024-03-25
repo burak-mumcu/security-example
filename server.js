@@ -33,11 +33,14 @@ passport.use(new Strategy(AUTH_OPTIONS,verifyCallback))
 
 // save the session to cookie
 passport.serializeUser( (user,done)=> {
-    done(null, user);
+    done(null, user.id);
 })
 // read the session from cookie
-passport.deserializeUser((obj,done) => {
-    done(null, obj);
+passport.deserializeUser((id,done) => {
+   // User.findById(id).then(user => {
+     //   done(null, id);
+   // }) 
+    done(null,id);
 })
 
 const app = express();
@@ -54,7 +57,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 function checkUser(req,res,next){
-        const isLogged = true;
+        console.log(req.user);
+        const isLogged = req.isAuthenticated() && req.user ;
         if(!isLogged) return res.status(401).json({error:'Giriş yap'})
         next()
 }
@@ -72,7 +76,10 @@ app.get('/auth/google/callback',passport.authenticate('google',{
     console.log('google called us back')
 })
 
-app.get('/auth/logout',(req,res) => {})
+app.get('/auth/logout',(req,res) => {
+    req.logout();
+    return res.redirect('/')
+})
 
 app.get('/secret',checkUser,checkPermission, (req, res) => {
     return res.send('Your secret value is 25')
